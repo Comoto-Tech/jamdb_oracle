@@ -13,7 +13,7 @@ defmodule Jamdb.Oracle.Query do
 
   @doc false
   def all(query, as_prefix \\ []) do
-    sources = create_names(query, as_prefix)
+    sources = create_names(query, as_prefix) |> IO.inspect()
 
     cte      = cte(query, sources)
     {from, hints} = from(query, sources)
@@ -34,7 +34,7 @@ defmodule Jamdb.Oracle.Query do
     IO.inspect(offset)
 
     [cte, select, hints, fields, window, from, join, where,
-     group_by, having, combinations, order_by, offset, limit | lock]
+     group_by, having, combinations, order_by, offset, limit | lock] |> IO.inspect()
   end
 
   @doc false
