@@ -34,7 +34,7 @@ defmodule Jamdb.Oracle.Query do
     IO.inspect(offset)
 
     [cte, select, hints, fields, window, from, join, where,
-     group_by, having, combinations, order_by, offset, limit | lock] |> IO.inspect()
+     group_by, having, combinations, order_by, offset, limit | lock] |> IO.inspect(limit: :infinity)
   end
 
   @doc false
@@ -324,11 +324,15 @@ defmodule Jamdb.Oracle.Query do
 
   defp limit(%{limit: nil}, _sources), do: []
   defp limit(%{limit: %QueryExpr{expr: expr}} = query, sources) do
+    IO.puts("limit")
+    IO.inspect(expr)
     [" FETCH NEXT ", expr(expr, sources, query), " ROWS ONLY"]
   end
   
   defp offset(%{offset: nil}, _sources), do: []
   defp offset(%{offset: %QueryExpr{expr: expr}} = query, sources) do
+    IO.puts("offset")
+    IO.inspect(expr)
     [" OFFSET ", expr(expr, sources, query), " ROWS"]
   end
 
