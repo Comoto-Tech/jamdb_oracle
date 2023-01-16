@@ -96,6 +96,9 @@ defmodule Jamdb.Oracle do
     end
   end
   def handle_execute(query, params, opts, s) do
+    IO.puts("handle execute")
+    IO.inspect(query)
+    IO.inspect(query)
     %Jamdb.Oracle.Query{statement: statement} = query
     returning = Enum.map(Keyword.get(opts, :out, []), fn elem -> {:out, elem} end)
     case query(s, statement |> Jamdb.Oracle.to_list, Enum.concat(params, returning)) do

@@ -13,6 +13,12 @@ defmodule Jamdb.Oracle.Query do
 
   @doc false
   def all(query, as_prefix \\ []) do
+    IO.puts("offset in query")
+    IO.inspect(query.offset)
+
+    IO.puts("limit in query")
+    IO.inspect(query.limit)
+
     sources = create_names(query, as_prefix) |> IO.inspect()
 
     cte      = cte(query, sources)
@@ -25,8 +31,8 @@ defmodule Jamdb.Oracle.Query do
     having   = having(query, sources)
     combinations = combinations(query)
     order_by = order_by(query, sources)
-    limit    = limit(query, sources)
     offset   = offset(query, sources)
+    limit    = limit(query, sources)
     lock     = lock(query.lock)
 
     IO.inspect(query)
@@ -323,15 +329,18 @@ defmodule Jamdb.Oracle.Query do
   end
 
   defp limit(%{limit: nil}, _sources), do: []
-  defp limit(%{limit: %QueryExpr{expr: expr}} = query, sources) do
+  defp limit(%{limit: %QueryExpr{expr: expr} = limit} = query, sources) do
     IO.puts("limit")
+    IO.inspect(limit)
     IO.inspect(expr)
     [" FETCH NEXT ", expr(expr, sources, query), " ROWS ONLY"]
   end
   
+  # Sean - why is offset getting a 1 and not a zero?
   defp offset(%{offset: nil}, _sources), do: []
-  defp offset(%{offset: %QueryExpr{expr: expr}} = query, sources) do
+  defp offset(%{offset: %QueryExpr{expr: expr} = offset} = query, sources) do
     IO.puts("offset")
+    IO.inspect(offset)
     IO.inspect(expr)
     [" OFFSET ", expr(expr, sources, query), " ROWS"]
   end
