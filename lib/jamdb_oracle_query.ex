@@ -29,6 +29,10 @@ defmodule Jamdb.Oracle.Query do
     offset   = offset(query, sources)
     lock     = lock(query.lock)
 
+    IO.inspect(query)
+    IO.inspect(limit)
+    IO.inspect(offset)
+
     [cte, select, hints, fields, window, from, join, where,
      group_by, having, combinations, order_by, offset, limit | lock]
   end
