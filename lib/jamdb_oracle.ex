@@ -43,9 +43,6 @@ defmodule Jamdb.Oracle do
     {:ok, any()} | {:error | :disconnect, any()}
   def query(conn, sql, params \\ [])
   def query(%{pid: pid, timeout: timeout}, sql, params) do
-    IO.puts("these are the params")
-    IO.inspect(params)
-
     case :jamdb_oracle.sql_query(pid, stmt(sql, params), timeout) do
       {:ok, [{:result_set, columns, _, rows}]} ->
         {:ok, %{num_rows: length(rows), rows: rows, columns: columns}}
@@ -104,6 +101,7 @@ defmodule Jamdb.Oracle do
     IO.inspect(params)
     IO.inspect(opts)
     IO.inspect(s)
+    params = Enum.reverse(params)
     %Jamdb.Oracle.Query{statement: statement} = query
     returning = Enum.map(Keyword.get(opts, :out, []), fn elem -> {:out, elem} end)
     case query(s, statement |> Jamdb.Oracle.to_list, Enum.concat(params, returning)) do
